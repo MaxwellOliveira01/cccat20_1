@@ -85,4 +85,90 @@ test.each(existentAccountIds)("get info of a specific user", async(id) => {
     expect(response.data).toHaveProperty("account_id", id);
 });
 
-    
+test("Should not get info of a non-existent user", async() => {
+    const response = await axios.get(`http://localhost:3000/accounts/${crypto.randomUUID()}`);
+    expect(response.status).toBe(200);
+    expect(response.data).toHaveLength(0);
+});
+
+test("Should fail when trying to create an account with an invalid cpf", async() => {
+    try {
+        await axios.post("http://localhost:3000/signup", {
+            "name": "marcos silva",
+            "email": "marcos@gmail.com",
+            "password": "Marcos123",
+            "cpf": "123456789"
+        });
+    } catch (error: any) {
+        expect(error.response.status).toBe(422);
+        expect(error.response.data).toHaveProperty("message", -1);
+    }
+});
+
+test("Should fail when trying to create an account with an invalid name", async() => {
+    try {
+        await axios.post("http://localhost:3000/signup", {
+            "name": "marcos",
+        });
+    } catch (error: any) {
+        expect(error.response.status).toBe(422);
+        expect(error.response.data).toHaveProperty("message", -3);
+    }
+});
+
+test("Should fail when trying to create an account with an invalid email", async() => {
+    try {
+        await axios.post("http://localhost:3000/signup", {
+            "name": "marcos silva",
+            "email": "marcos.com"
+        });
+    } catch (error: any) {
+        expect(error.response.status).toBe(422);
+        expect(error.response.data).toHaveProperty("message", -2);
+    }
+});
+
+test("Should fail when trying to create an account with an invalid password", async() => {
+    try {
+        await axios.post("http://localhost:3000/signup", {
+            "name": "marcos silva",
+            "email": "marcos@gmail.com",
+            "password": "12345678"
+        });
+    } catch (error: any) {
+        expect(error.response.status).toBe(422);
+        expect(error.response.data).toHaveProperty("message", -5);
+    }
+});
+
+test("Should fail when trying to create an account with an invalid car plate", async() => {
+    try {
+        await axios.post("http://localhost:3000/signup", {
+            "name": "Francisco Lisboa",
+            "email": "fran@gmail.com",
+            "password": "franciscoL123",
+            "cpf": "71428793860",
+            "isDriver": true,
+            "carPlate": "HQ41589",
+        });
+    } catch (error: any) {
+        expect(error.response.status).toBe(422);
+        expect(error.response.data).toHaveProperty("message", -6);
+    }
+});
+
+test("Should fail when trying to create an account that already exists", async() => {
+    try {
+        await axios.post("http://localhost:3000/signup", {
+            "name": "Antonio Alencar",
+            "email": `teste@gmail.com`,
+            "password": "Antonio123",
+            "cpf": "97456321558",
+            "isDriver": true,
+            "carPlate": "ABC1234",
+        });
+    } catch (error: any) {
+        expect(error.response.status).toBe(422);
+        expect(error.response.data).toHaveProperty("message", -4);
+    }
+});
