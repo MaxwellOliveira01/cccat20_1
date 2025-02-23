@@ -3,7 +3,7 @@ import pgp from "pg-promise";
 import express from "express";
 import { validateCpf } from "./validateCpf";
 import { validatePassword } from "./validatePassword";
-import { Account, AccountData, createAccount } from "./../classes/account";
+import { Account, AccountData, createAccount, SignupErrors } from "../api/account";
 import { create } from "domain";
 
 const app = express();
@@ -42,12 +42,12 @@ app.post("/signup", async function (req, res) {
 	let input = req.body as AccountData;
 	let connection = getDbConnection();
 	try {
-		if(!validateCpf(input.cpf)) throw new Error("-1");
-		if(!validateEmail(input.email)) throw new Error("-2");
-		if(!validateName(input.name)) throw new Error("-3");
-		if(await userAlreadyExists(input.email, connection)) throw new Error("-4");
-		if(!validatePassword(input.password)) throw new Error("-5");
-		if(input.isDriver && !validateCarPlate(input.carPlate)) throw new Error("-6");
+		if(!validateCpf(input.cpf)) throw new Error(SignupErrors.InvalidCpf);
+		if(!validateEmail(input.email)) throw new Error(SignupErrors.InvalidEmail);
+		if(!validateName(input.name)) throw new Error(SignupErrors.InvalidName);
+		if(await userAlreadyExists(input.email, connection)) throw new Error(SignupErrors.UserAlreadyExists);
+		if(!validatePassword(input.password)) throw new Error(SignupErrors.InvalidPassword);
+		if(input.isDriver && !validateCarPlate(input.carPlate)) throw new Error(SignupErrors.InvalidCarPlate);
 
 		let account: Account = {
 			accountId: getUUID(),

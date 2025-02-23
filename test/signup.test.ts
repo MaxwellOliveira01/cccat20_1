@@ -1,5 +1,6 @@
 import axios from "axios";
 import crypto from "crypto";
+import { SignupErrors } from "../api/account";
 
 const drivers = [
     {
@@ -90,7 +91,7 @@ test("Should fail when trying to create an account with an invalid cpf", async()
         });
     } catch (error: any) {
         expect(error.response.status).toBe(422);
-        expect(error.response.data).toHaveProperty("message", "-1");
+        expect(error.response.data).toHaveProperty("message", SignupErrors.InvalidCpf);
     }
 });
 
@@ -106,7 +107,7 @@ test("Should fail when trying to create an account with an invalid name", async(
         });
     } catch (error: any) {
         expect(error.response.status).toBe(422);
-        expect(error.response.data).toHaveProperty("message", "-3");
+        expect(error.response.data).toHaveProperty("message", SignupErrors.InvalidName);
     }
 });
 
@@ -122,7 +123,7 @@ test("Should fail when trying to create an account with an invalid email", async
         });
     } catch (error: any) {
         expect(error.response.status).toBe(422);
-        expect(error.response.data).toHaveProperty("message", "-2");
+        expect(error.response.data).toHaveProperty("message", SignupErrors.InvalidEmail);
     }
 });
 
@@ -138,7 +139,7 @@ test("Should fail when trying to create an account with an invalid password", as
         });
     } catch (error: any) {
         expect(error.response.status).toBe(422);
-        expect(error.response.data).toHaveProperty("message", "-5");
+        expect(error.response.data).toHaveProperty("message", SignupErrors.InvalidPassword);
     }
 });
 
@@ -154,7 +155,7 @@ test("Should fail when trying to create an account with an invalid car plate", a
         });
     } catch (error: any) {
         expect(error.response.status).toBe(422);
-        expect(error.response.data).toHaveProperty("message", "-6");
+        expect(error.response.data).toHaveProperty("message", SignupErrors.InvalidCarPlate);
     }
 });
 
@@ -170,6 +171,6 @@ test("Should fail when trying to create an account that already exists", async()
         });
     } catch (error: any) {
         expect(error.response.status).toBe(422);
-        expect(error.response.data).toHaveProperty("message", "-4");
+        expect(error.response.data).toHaveProperty("message", SignupErrors.UserAlreadyExists);
     }
 });

@@ -18,3 +18,12 @@ export function createAccount(id: string, data: AccountData): Account {
         ...data
     };
 }
+
+export enum SignupErrors {
+    "InvalidCpf" = "InvalidCpf",
+    "InvalidName" = "InvalidName",
+    "InvalidEmail" = "InvalidEmail",
+    "InvalidPassword" = "InvalidPassword",
+    "InvalidCarPlate" = "InvalidCarPlate",
+    "UserAlreadyExists" = "UserAlreadyExists",
+};
